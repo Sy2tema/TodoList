@@ -25,14 +25,26 @@ const TodoHeaderBlock = style.div`
 `;
 
 const TodoHeader = () => {
-    const works = useTodoState();
-    console.log(works);
+    const todos = useTodoState();
+
+    //filter는 객체가 아닌 배열에 적용되는 메소드이기 때문에 initialState내부 요소를 객체에서 배열로 교체해주었다.
+    const worksCount = todos.filter(work => !work.isFinish);
+    
+    const today = new Date();
+
+    //toLocaleDateString()메소드를 활용해 각 문화권에 맞는 날짜를 불러오도록 했다.
+    const resultString = today.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const weekDay = today.toLocaleDateString('ko-KR', { weekday: 'long' });
 
     return (
         <TodoHeaderBlock>
-            <h1>2019년 12월 10일</h1>
-            <div className="day">수요일</div>
-            <div className='remaining-work'>할 일이 2개 남았습니다.</div>
+            <h1>{resultString}</h1>
+            <div className="day">{weekDay}</div>
+            <div className='remaining-work'>할 일이 {worksCount.length}개 남았습니다.</div>
         </TodoHeaderBlock>
     );
 };

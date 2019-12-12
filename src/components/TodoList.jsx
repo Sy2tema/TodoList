@@ -1,6 +1,7 @@
 import React from 'react';
 import style from 'styled-components';
 import WorkItem from './TodoItem';
+import { useTodoState } from '../TodoContext';
 
 //flex속성을 통해 컨테이너들 간의 크기 비율을 조절할 수 있다. 이 값에는 auto, initial, none이나 양의 숫자를 입력해야 한다.
 //overflow-y속성을 통해 박스의 내용이 y축으로 넘쳤을 때 자동으로 스크롤 바가 생기도록 만들어준다.
@@ -14,12 +15,18 @@ const TodoListBlock = style.div`
 `;
 
 const TodoList = () => {
+    const todos = useTodoState();
+    //map메소드를 사용할 때는 unique한 요소를 하나정도 key로 지정해주는 것이 좋다.
     return (
         <TodoListBlock>
-            <WorkItem content='컴포넌트 토대 완성하기' isFinish/>
-            <WorkItem content='내부 동작 코드 구현하기' isFinish={false}/>
-            <WorkItem content='컴포넌트들에 대한 css부분 완성하기' isFinish={false}/>
-            <WorkItem content='Git 버전 관리하기' isFinish={false}/>
+            {todos.map(value => (
+                <WorkItem 
+                    key={value.id}
+                    id={value.id}
+                    content={value.content}
+                    isFinish={value.isFinish}
+                />
+            ))}
         </TodoListBlock>
     );
 };

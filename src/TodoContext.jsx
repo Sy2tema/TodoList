@@ -1,25 +1,7 @@
 import React, { useReducer, createContext, useContext, useRef } from 'react';
 
 
-const initialState = {
-    data: [{
-        id: 1,
-        content: '컴포넌트 토대 완성하기',
-        isFinish: true
-    }, {
-        id: 2,
-        content: '내부 동작 코드 구현하기',
-        isFinish: false
-    }, {
-        id: 3,
-        content: '컴포넌트들에 대한 css부분 완성하기',
-        isFinish: false
-    }, {
-        id: 4,
-        content: 'Git 버전 관리하기',
-        isFinish: true
-    }]
-};
+const initialState = [];
 
 export const CREATE = 'CREATE';
 export const TOGGLE = 'TOGGLE';
@@ -28,13 +10,8 @@ export const DELETE = 'DELETE';
 const reducer = (state, action) => {
     switch (action.type) {
         case CREATE:
-            return {
-                ...state,
-                data: {
-                    todo: action.todo
-                }
-            };
-            case TOGGLE:
+            return state.concat(action.todo);
+        case TOGGLE:
             return state.map(todo => 
                 todo.id === action.id ? {...todo, isFinish: !todo.isFinish} : todo  
             );

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import style, { css } from 'styled-components';
 import { MdDone, MdDelete } from 'react-icons/md';
+import { useTodoDispatch, TOGGLE, DELETE } from '../TodoContext';
 
 //styled-components라이브러리의 Component Selector기능을 사용했다.
 //&:hover하의 코드는 해당 컴포넌트 위에 커서가 있을 때 WorkRemove컴포넌트를 보여주라는 뜻이다.
@@ -61,15 +62,24 @@ const InternalContent = style.div`
 `;
 
 const TodoItem = ({ id, isFinish, content }) => {
+    const dispatch = useTodoDispatch();
+    const onToggle = () => dispatch({ type: TOGGLE, id });
+    const onDelete = () => dispatch({ type: DELETE, id });
+
     return (
         <WorkItemBlock>
-            <CheckedIcon isFinish={isFinish}>{isFinish && <MdDone />}</CheckedIcon>
-            <InternalContent isFinish={isFinish}>{content}</InternalContent>
-            <WorkRemove>
+            <CheckedIcon isFinish={isFinish} onClick={onToggle}>
+                {isFinish && <MdDone />}
+            </CheckedIcon>
+            <InternalContent isFinish={isFinish}>
+                {content}
+            </InternalContent>
+            <WorkRemove onClick={onDelete}>
                 <MdDelete />
             </WorkRemove>
         </WorkItemBlock>
     );
 };
 
-export default TodoItem;
+//memo를 사용해 불필요한 렌더링 부분을 방지해준다.
+export default memo(TodoItem);

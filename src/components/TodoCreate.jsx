@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import style, { css } from 'styled-components';
 import { MdAdd } from 'react-icons/md';
+import { useTodoDispatch, useTodoNewId, CREATE } from '../TodoContext';
 
 //hover와 active를 이용해 10%씩 밝고 어두운 효과를 내도록 하였다.
 const CreateButton = style.button`
@@ -35,7 +36,7 @@ const CreateButton = style.button`
     transition: 0.125s all ease-in;
 
     ${props =>
-        props.isOpen &&
+        props.isCreate &&
         css`
             background: #FF6B6B;
             &:hover {
@@ -77,24 +78,51 @@ const InputString = style.input`
 `;
 
 const TodoCreate = () => {
-    const [isOpen, setOpen] = useState(false);
+    const [isCreate, setCreate] = useState(false);
+    const [value, setValue] = useState('');
 
-    const handleClickIcon = () => setOpen(!isOpen);
+    const dispatch = useTodoDispatch();
+    const newId = useTodoNewId();
+
+    const handleClickIcon = () => setCreate(!isCreate);
+    const handleValueChange = event => setValue(event.target.value);
+    const handleSubmitEvent = event => {
+        event.preventDefault();
+
+        dispatch({
+            type: CREATE,
+            todo: {
+                id: newId.current,
+                content: value,
+                isFinish: false
+            }
+        });
+
+        //할일 생성이 완료된 후 입력창을 초기화해준다.
+        setValue('');
+        setCreate(false);
+        newId.current++;
+    };
 
     return (
         <>
-            {isOpen && (
+            {isCreate && (
                 <InsertFormBlock>
-                    <InsertForm>
-                        <InputString autoFocus placeholder='할 일을 입력 후 Enter를 눌러주세요.' />
+                    <InsertForm onSubmit={handleSubmitEvent}>
+                        <InputString 
+                            autoFocus
+                            placeholder='할 일을 입력 후 Enter를 눌러주세요.' 
+                            onChange={handleValueChange}
+                            value={value}
+                        />
                     </InsertForm>
                 </InsertFormBlock>
             )}
-            <CreateButton onClick={handleClickIcon} isOpen={isOpen}>
+            <CreateButton onClick={handleClickIcon} isCreate={isCreate}>
                 <MdAdd />
             </CreateButton>
         </>
     );
 };
 
-export default TodoCreate;
+export default memo(TodoCreate);
