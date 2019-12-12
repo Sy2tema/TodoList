@@ -8,6 +8,9 @@
   "author": "Sy2tema",
   "license": "MIT",
   "dependencies": {
+    "@types/react": "^16.9.16",
+    "@types/react-dom": "^16.9.4",
+    "@types/styled-components": "^4.4.1",
     "classnames": "^2.2.6",
     "css-loader": "^3.2.1",
     "node-sass": "^4.13.0",
